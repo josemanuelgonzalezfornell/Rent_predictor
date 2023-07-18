@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rental predictor home</title>
+    <style>
+        body {
+            background-image: url('/images/background.png');
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #445e83;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.708);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-toggle {
+            width: 40px;
+            height: 40px;
+            background-color: #445e83;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #1b1a1a;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        .dropdown-toggle span:nth-child(2) {
+            top: 50%;
+            transform: translateY(-80%);
+        }
+
+        .dropdown-toggle span:nth-child(3) {
+            top: 72.5%;
+            transform: translateY(-50%);
+            bottom: 8px;
+        }
+
+        .dropdown-content a {
+            color: #1a1818;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #454545;
+        }
+
+        .container {
+            width: 600px;
+            margin: 100px auto;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .text {
+            text-align: justify;
+            font-size: 20px;
+            font-weight: normal;        }
+    </style>
+</head>
+
+<body>
+    <div class="dropdown">
+        <div class="dropdown-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/indv-predict">Predicción Individual</a>
+            <a href="/csv-predict">Predicción por CSV</a>
+            <a href="/retrain">Reentreno del modelo</a>
+            <a href="/leyend">Leyenda</a>
+        </div>
+    </div>
+    <div class="container">
+        <h0 class="title">Predictor de precios de alquiler</h0>
+        <h2 class="text">Bienvenido al <strong>predictor de precios de alquilere</strong> de viviendas unifamiliares.
+            En el <strong>menú de la esquina superior derecha</strong> encontraras diferentes opciones de introducción de datos para obtener su predicción,
+            para que encuentré la forma más cómoda que se le ajuste a la hora de encontrar la zona con su precio ideal.
+            No deje que le estafen ni gaste su dinero en un tasador, cuente con este predictor el cual cuenta con una <strong>tasa de aciertos del {{r2score}}%</strong>.
+        </h2>
+        <h2 class=text>Esperamos que cumpla su espectativas.</h2>
+        <h2 class=text>¡Un saludo!</h2>
+        <br>
+        <h6>
+            Esta aplicación se mantiene en desarrollo constante, diferentes funcionalidades y mejoras se irán implantando con el tiempo.
+        </h6>
+    </div>
+</body>
+</html>

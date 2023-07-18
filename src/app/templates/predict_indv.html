@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rental predictor indv</title>
+    <style>
+        body {
+            background-image: url('/images/background.png');
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 400px;
+            margin: 100px auto;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            margin-bottom: 10px;
+        }
+
+        .input-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .prediction {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #445e83;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.708);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-toggle {
+            width: 40px;
+            height: 40px;
+            background-color: #445e83;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #1b1a1a;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        .dropdown-toggle span:nth-child(2) {
+            top: 50%;
+            transform: translateY(-80%);
+        }
+
+        .dropdown-toggle span:nth-child(3) {
+            top: 72.5%;
+            transform: translateY(-50%);
+            bottom: 8px;
+        }
+
+        .dropdown-content a {
+            color: #1a1818;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #454545;
+        }
+
+        .reset-button {
+        margin-top: 10px;
+        width: 100%;
+        padding: 10px;
+        background-color: #ff6f6f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="dropdown">
+        <div class="dropdown-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/indv-predict">Predicción Individual</a>
+            <a href="/csv-predict">Predicción por CSV</a>
+            <a href="/retrain">Reentreno del modelo</a>
+            <a href="/leyend">Leyenda</a>
+        </div>
+    </div>
+    <div class="container">
+        <h1 class="title">Predicción de precios de alquiler</h1>
+        <form action="/indv-predict" method="post">
+            <div class="input-field">
+                <label>{{traduccion[df.columns[0]]}}:</label>
+                <input type="string" name="Col1" required>
+            </div>
+            <div class="input-field">
+                <label>{{traduccion[df.columns[1]]}}:</label>
+                <input type="string" name="Col2" required>
+            </div>
+            <div class="input-field">
+                <label>{{traduccion[df.columns[2]]}}:</label>
+                <input type="string" name="Col3" required>
+            </div>
+            <div class="input-field">
+                <label>{{traduccion[df.columns[3]]}}:</label>
+                <input type="string" name="Col4" required>
+            </div>
+            <div class="input-field">
+                <label>{{traduccion[df.columns[4]]}}:</label>
+                <input type="string" name="Col5" required>
+            </div>
+            <div class="input-field">
+                <label>{{traduccion[df.columns[5]]}}:</label>
+                <input type="string" step="0.01" name="Col6" required>
+            </div>
+            <button class="submit-button" type="submit" formmethod="post">Predecir</button>
+            <button class="reset-button" type="reset" onclick="resetForm()">Limpiar</button>
+        </form>
+        {% if prediction %}
+        <div class="prediction">
+            Precio del alquiler por m2 de viviendas unifamiliares:
+            {{prediction}} €
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function resetForm() {
+            // Limpiar el formulario y la predicción
+            document.querySelector('form').reset();
+            document.querySelector('.prediction').innerHTML = '';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rental predictor retrain</title>
+    <style>
+ body {
+            background-image: url('/images/background.png');
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 400px;
+            margin: 100px auto;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+                .file-input {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input__input {
+            display: none;
+        }
+
+        .input__label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: rgba(76, 175, 80, 0.7);
+            color: #ffffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .input__label:hover {
+            background-color: rgba(76, 175, 80, 0.9);
+        }
+
+        .input__text {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+
+        /* Estilo opcional para mostrar el nombre del archivo seleccionado */
+        .input__input:focus + .file-input__label {
+            box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .input__input:focus + .file-input__label::before {
+            content: attr(data-file-name);
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .retrain {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #445e83;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.708);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-toggle {
+            width: 40px;
+            height: 40px;
+            background-color: #445e83;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #1b1a1a;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        .dropdown-toggle span:nth-child(2) {
+            top: 50%;
+            transform: translateY(-80%);
+        }
+
+        .dropdown-toggle span:nth-child(3) {
+            top: 72.5%;
+            transform: translateY(-50%);
+            bottom: 8px;
+        }
+
+        .dropdown-content a {
+            color: #1a1818;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #454545;
+        }
+
+        .reset-button {
+        margin-top: 10px;
+        width: 100%;
+        padding: 10px;
+        background-color: #ff6f6f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dropdown">
+        <div class="dropdown-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/indv-predict">Predicción Individual</a>
+            <a href="/csv-predict">Predicción por CSV</a>
+            <a href="/retrain">Reentreno del modelo</a>
+            <a href="/leyend">Leyenda</a>
+        </div>
+    </div>
+    <div class="container">
+        <h1 class="title">Reentreno del modelo</h1>
+        <form action="/retrain" method="post" enctype="multipart/form-data">
+            <div class="input">
+                <label>Archivo CSV:</label>
+                <div class="file-input">
+                    <input type="file" name="csvFile" id="csvFile",class="input__input" accept=".csv" required>
+                    <label for="csvFile" class="input__label">
+                        <span class="input__text">Arrastra y suelta un archivo CSV aquí o haz clic para seleccionar</span>
+                    </label>
+                </div>
+            </div>            
+            <input type="hidden" name="csvFileName" id="csvFileName" value="">
+            <button class="submit-button" type="submit" formmethod="post">Reentrenar</button>
+            <button class="reset-button" type="reset" onclick="resetForm()">Limpiar</button>
+        </form>
+        {% if model_train_score %}
+        <div class="retrain">
+            Resultado de la predicción:
+            <pre>El nuevo modelo muestra un R2 de 
+    <strong>{{model_train_score}}%</strong>
+
+El modelo se ha reentrenado y guardado.
+            </pre>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script> 
+        function resetForm() {
+            // Limpiar el formulario y la predicción
+            document.querySelector('form').reset();
+            document.querySelector('.retrain').innerHTML = '';
+        }
+    </script>
+</body>

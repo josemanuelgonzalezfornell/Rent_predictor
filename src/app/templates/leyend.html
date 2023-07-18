@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rental predictor leyend</title>
+    <style>
+        body {
+            background-image: url('/images/background.png');
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #445e83;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.708);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-toggle {
+            width: 40px;
+            height: 40px;
+            background-color: #445e83;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #1b1a1a;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        .dropdown-toggle span:nth-child(2) {
+            top: 50%;
+            transform: translateY(-80%);
+        }
+
+        .dropdown-toggle span:nth-child(3) {
+            top: 72.5%;
+            transform: translateY(-50%);
+            bottom: 8px;
+        }
+
+        .dropdown-content a {
+            color: #1a1818;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #454545;
+        }
+
+        .container {
+            width: 1200px;
+            margin: 100px auto;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .text {
+            text-align: center;
+            font-size: 20px;
+            font-weight: normal;        }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+        th, td {
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #aab0bb96;
+            text-align: center;
+        }
+
+        tr:nth-child(odd) {
+            background-color: rgba(97, 177, 226, 0.673);
+            text-align: center;
+        }
+
+        th {
+            background-color: #ffffff00;
+            color: rgb(9, 17, 25);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dropdown">
+        <div class="dropdown-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/indv-predict">Predicción Individual</a>
+            <a href="/csv-predict">Predicción por CSV</a>
+            <a href="/retrain">Reentreno del modelo</a>
+            <a href="/leyend">Leyenda</a>
+        </div>
+    </div>
+    <div class="container">
+        <h0 class="title">Leyenda</h0>
+        <h2 class="text"><strong>R2 home:</strong></h2>
+            <br>
+        <h3 class="text">En la página principal de bienvenida, titulada como página "home", se muestra una métrica de R2 del modelo.<br>
+            Esta métrica es calculada comparando la predicción que realiza el modelo del dataset correspondiente <br>
+            año anterior al corriente con los datos reales de ese mismo dataframe.<br>
+        </h3>
+        <br>
+        <br>    
+        <h2 class="text"><strong>Características de predicción individual:</strong></h2>
+        <br>
+        <h3 class="text">Las características a rellenar en la predicción individual son las Features <br>
+            que usa el modelo para predecir el precio de la vivienda unifamiliar. Estas features son las más representativas <br>
+            del dataset y las que más peso tienen en el modelo.<br>
+        </h3>
+        <br>
+        <br>                
+        <h2 class="text"><strong>Formato dataset de predicción csv:</strong></h2>
+        <br>
+        <h3 class="text">Para poder predecir utilizando csv mediante la predicción por csv,<br>
+        el dataset debe tener las siguientes columnas en el siguiente orden presentado:</h3>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in columns.columns %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in columns.iterrows() %}
+                    <tr>
+                        {% for value in row[1] %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <h3 class="text">El año presentado al final del nombre de algunos columnas puede variar y puede estar incluido o no.<br>
+            Sin embargo,en caso de que no esté incluido, debera eliminarse el guion bajo que precede a dicho año.<br>
+            <br>
+        <br>
+        <br>                       
+        <h2 class="text"><strong>Formato dataset de reentreno:</strong></h2>
+        <br>
+        <h3 class="text">Eldataset de reentreno sigue le mismo formato que el dataset de predicción por csv.<br>
+            La única variación es que debe contener una columna adicional que será el target.<br>
+            Esta columna debe nombrarse como "Alquiler_mes_vu_m2" ó "Alquiler_mes_vu_m2_2020",<br>
+            pudiendo sustituirse el 2020 por cualquier otro año.<br>
+        </h3>
+        <br>
+        <br>
+        <br>
+        <h6> Aplicación realizada por José Manuel González Fornell.</h6>                        
+    </div>
+</body>
+</html>
