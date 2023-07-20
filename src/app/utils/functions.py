@@ -25,7 +25,6 @@ def clean_df(dataframe, str_column, drop_list=None, cleaning=True, not_encoder=F
     df[[str_column]] = encoder.fit_transform(df[[str_column]])
 
     if cleaning==True:
-        # df.columns = [re.sub(r"_20\d{2}$", '', col) for col in df.columns]
         df.drop(drop_list, axis=1, inplace=True)
 
         df_features = pd.read_csv("data/df_features.csv", sep=";", index_col=0)
