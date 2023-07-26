@@ -19,10 +19,15 @@ async def welcome(request: Request):
 
 @predict_csv_route.post("/csv-predict", response_class=HTMLResponse)
 async def predict_csv(request: Request, csvFile: UploadFile = Form(...)):
+    # read model
     model = joblib.load("model/model.pkl")
+
+    # read data from the app
     content = csvFile.file.read()
     content_str= content_str = StringIO(content.decode('utf-8'))
-    df = pd.read_csv(content_str, sep=";", index_col=0)  # Cargar el contenido del archivo en un DataFrame de pandas
+    df = pd.read_csv(content_str, sep=";", index_col=0) 
+
+    # Predict and print the prediction
     prediction = pd.DataFrame(fn.get_prediction(model, df, "Comunidad_autonoma", ["Provincia", "Codigo_municipio", "Codigo_provincia"]),index=df.index, columns=["Alquiler_mes_vu_m2"])
     prediction_str = prediction.to_string(index=True)
     return templates.TemplateResponse("predict_csv.html", {"request": request, "prediction": prediction_str})

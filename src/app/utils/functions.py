@@ -15,21 +15,39 @@ from typing import Literal
 import joblib
 import re
 
+# Clean a dataframe to format it
 def clean_df(dataframe, str_column, drop_list=None, cleaning=True, not_encoder=False):
+    """
+    Cleans a given dataframe by performing various operations such as renaming columns, encoding categorical variables, dropping specified columns, and removing unwanted rows.
 
+    Parameters:
+       dataframe: Pandas DataFrame object. The dataframe to be cleaned.
+       str_column: string. The name of the column containing categorical variables to be encoded.
+       drop_list: list, optional. The list of column names to be dropped from the dataframe.
+       cleaning: bool, default=True. If True, performs cleaning operations such as dropping columns and removing unwanted rows.
+       not_encoder: bool, default=False. If True, returns the original dataframe without encoding.
+
+    Returns:
+       cleaned_df: Pandas DataFrame object. The cleaned dataframe after performing all the cleaning operations.
+    """
+
+    # Rename names of columns which have a years at the end of their names
     dataframe.columns = [re.sub(r"_\d{4}$", '', col) for col in dataframe.columns]
 
     df = dataframe.copy()
 
+    # Encode categorical variables
     encoder=OrdinalEncoder()
     df[[str_column]] = encoder.fit_transform(df[[str_column]])
 
+    # If cleaning==True drop specified columns
     if cleaning==True:
         df.drop(drop_list, axis=1, inplace=True)
 
         df_features = pd.read_csv("data/df_features.csv", sep=";", index_col=0)
         df.drop(df_features[6:].index, axis=1, inplace=True)
 
+    # if not_encoder==True return the dataframe without encoding
     if not_encoder==True:
 
         dataframe = dataframe[df.columns]
@@ -38,15 +56,36 @@ def clean_df(dataframe, str_column, drop_list=None, cleaning=True, not_encoder=F
     else:
         return df
 
+# Get prediction
 def get_prediction(model, dataframe, str_column, drop_list=None, cleaning=True, not_encoder=False):
+    """Get prediction from the model.
+    
+    Args:
+        model (object): The trained model.
+        dataframe (DataFrame): The input dataframe.
+        str_column (str): The name of the column containing categorical data.
+    
+    Returns:
+        prediction (array-like): The prediction.
+    """
 
+    # Get dataframe cleaned
     df = clean_df(dataframe, str_column, drop_list, cleaning, not_encoder)
 
+    # Get prediction
     predction = model.predict(df)
 
     return predction
 
+ # Polynomial Linear Regresion pipeline
 def pipelines():
+    """
+    Creates the pipelines for the different models
+        
+    returns:
+        pipelines: list of pipelines, list of names of models, numbers of clusters
+    """
+
     plr_pipe = Pipeline([
         ('scaler', StandardScaler()),
         ("PolynomialFeatures", PolynomialFeatures()),
@@ -92,7 +131,22 @@ def pipelines():
             ["Polynomial Regression", "ElasticNet", "KNeighborsRegressor", "SuperVectorMachine",
               "Random Forest", "GradientBoosting", "AdaBoost", "XGBoost"])
 
+# Obtain a baseline of Regression models
 def get_baseline(df, target_column, pipes, pipe_name, X_train, Y_train, cv:int = 5, sort_metric: Literal["MAE", "MAPE", "MSE", "RMSE", "R2", None] = None):
+    """
+    Obtain a baseline of Regression models
+    
+    args:
+        pipes: list of pipelines
+        pipe_name: list of names of models
+        X_train: X_train dataframe
+        Y_train: Y_train dataframe
+        cv: number of folds for cross validation
+        sort_metric: metric to sort the models by. Must be one of these: MAE, MAPE, MSE, RMSE, R2, None
+        
+    returns:
+        grid_serch.best_estimator_: best pipeline of the baseline 
+    """
 
     pipe_list = pipes.copy()
 
@@ -232,26 +286,32 @@ def get_baseline(df, target_column, pipes, pipe_name, X_train, Y_train, cv:int =
                 "RMSE": "neg_root_mean_squared_error",
                 "R2": "r2"}
 
-    # GridSearchCV of best model
-    # grid_search = GridSearchCV(estimator=model,
-    #                            param_grid=param_grid,
-    #                            cv=cv,
-    #                            scoring=scorings[sort_metric])
-
-    # grid_search.fit(X_train, Y_train)
-
     final_model = model
     
     final_model.fit(df.drop(columns=[target_column]), df[target_column])
-    
-    # return (grid_search.best_estimator_,grid_search.best_score_, final_model)
+
     return (r2_results[0], final_model)
 
 
+# Obtein a baseline test of Regression models
 def model_tests(model, X_test, Y_test, sort_metric):
+    """
+    Calculates the specified sort metric for evaluating a machine learning model.
 
+    Parameters:
+        model (object): The trained machine learning model.
+        X_test (array-like): The input features for testing the model.
+        Y_test (array-like): The true labels for testing the model.
+        sort_metric (str): The sort metric to calculate. Can be one of "MAE", "MAPE", "MSE", "RMSE", or "R2".
+
+    Returns:
+        The model with the best metric.
+    """
+
+    # Get prediction
     prediction = model.predict(X_test)
 
+    # Sort metric depend on the metric
     if sort_metric == "MAE":
         mean_absolute_error(Y_test, prediction)
     
@@ -269,13 +329,29 @@ def model_tests(model, X_test, Y_test, sort_metric):
 
     return prediction[0]
 
+# Get best regression model of machine learning for one dataframe
 def get_best_model(df, column_taget, X_train, Y_train, X_test, Y_test, cv:int = 5, sort_metric: Literal["MAE", "MAPE", "MSE", "RMSE", "R2", None] = None):
-    
-    # model_train, model_train_score, final_model = get_baseline(df, column_taget, pipelines()[0], pipelines()[1], X_train, Y_train, cv, sort_metric)
+    """
+    Retrieves the best model based on the given dataset and target column.
 
+    Parameters:
+        df (pandas.DataFrame): The dataset to train and test the models.
+        column_target (str): The target column to be predicted by the models.
+        X_train (numpy.ndarray): The training dataframe.
+        Y_train (numpy.ndarray): The training target values.
+        X_test (numpy.ndarray): The testing dataframe.
+        Y_test (numpy.ndarray): The testing target values.
+        cv (int, optional): The number of folds for cross-validation. Defaults to 5.
+        sort_metric (Literal["MAE", "MAPE", "MSE", "RMSE", "R2", None], optional): The metric used to sort the models. Defaults to None.
+
+    Returns:
+        Tuple[float, float, Any]: A tuple containing the model's training score, test score, and the final model.
+    """
+
+    # Get baseline and the best model from this baseline
     model_train_score, final_model = get_baseline(df, column_taget, pipelines()[0], pipelines()[1], X_train, Y_train, cv, sort_metric)
 
+    # Get metrics of the best model from the test data
     test_metrics = model_tests(final_model, X_test, Y_test, sort_metric)
     
-    # return (model_train, model_train_score, test_metrics, final_model)
     return  (round(model_train_score, 2), round(test_metrics, 2), final_model)
