@@ -50,7 +50,7 @@ La app esta desplegada en **Azure**, puede acceder a ella desde el siguiente enl
 La app consta de las siguientes páginas:  
   
 > ### Home  
-> ![img](src/img/home.png "Home")  
+> ![img](src/img/Home.png "Home")  
 > Pagina de inicio donde muestra una pequeña descripción de la app y el R2 del modelo. Este R2 se actualiza cada vez que se modifica el modelo.  
 
 > ### Predicción individual 
