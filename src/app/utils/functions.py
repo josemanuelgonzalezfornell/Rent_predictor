@@ -6,14 +6,13 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.svm import SVR
 import xgboost as xgb
-from sklearn.cluster import KMeans
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
-from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.model_selection import cross_val_score
 import pandas as pd
 import numpy as np
-from typing import Literal
-import joblib
+from typing_extensions import Literal
 import re
+import joblib
 
 # Clean a dataframe to format it
 def clean_df(dataframe, str_column, drop_list=None, cleaning=True, not_encoder=False):

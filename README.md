@@ -41,9 +41,9 @@ De las features anteriores, el modelo utiliza únicamente aquellas 6 que explica
   
 ## Acceso a la app  
   
-La app esta desplegada en **Azure**, puede acceder a ella desde el siguiente enlace:
+La app esta desplegada en **fly.io**, puede acceder a ella desde el siguiente enlace:
   
-### ["Rent-predictor"](http:rent-predictor.bcckc4c3dne4g8ec.westeurope.azurecontainer.io "Acceso a la app")  
+### ["Rent-predictor"](https://rentpredictor.fly.dev/ "Acceso a la app")  
   
 ## App  
   
@@ -88,7 +88,7 @@ La app consta de las siguientes páginas:
   
 ## Ejecución en local  
   
-Se debe colocar un terminal en la carpeta app, activar el entorno virtual "env" y escribir el siguiente código:  
+Se debe colocar un terminal en la carpeta app, activar el entorno virtual "env", con una versión de python 3.11, o posterior y escribir el siguiente código:  
   
 ```bash
 uvicorn app:app --port 8080
